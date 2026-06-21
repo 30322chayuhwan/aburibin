@@ -1,2 +1,7 @@
-Flask==3.0.3
-openai==1.14.1
+Flask
+openai
+gunicorn
+beautifulsoup4
+requests
+lxml
+python-dotenv
