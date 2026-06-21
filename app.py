@@ -54,7 +54,6 @@ def home():
 @app.route("/google-news", methods=["POST"])
 def google_news():
     data = request.get_json(silent=True) or {}
-    # 빌더에서 파라미터 이름을 '파라미터'로 설정했다고 가정
     y = data.get("action", {}).get("params", {}).get("파라미터", "").strip()
 
     if not y:
@@ -129,7 +128,7 @@ def ghost_chat():
     is_cleared = "[SUCCESS]" in ai_response
     display_text = ai_response.replace("[SUCCESS]", "").strip()
     
-    # 응답 조립 (성공하면 퀵리플라이 버튼 추가)
+    # 응답 조립
     response_data = {
         "version": "2.0",
         "template": {
@@ -139,12 +138,24 @@ def ghost_chat():
     }
     
     if is_cleared:
+        # 🚪 성공 시 1: 다음 장소로 갈 수 있는 퀵리플라이 버튼 추가
         response_data["template"]["quickReplies"].append({
             "action": "block",
             "label": "🚪 열린 길로 탈출하기",
             "blockId": "6a1ce6546f076d7204740fbb" 
         })
-        # 설득 완료 시 다음 사람을 위해 해당 유저의 대화 기록 리셋
+        
+        # 🌟 성공 시 2: 카카오톡 빌더에 부여했던 'ghost_mode' 컨텍스트를 강제로 종료(lifeSpan: 0) 시킵니다!
+        response_data["context"] = {
+            "values": [
+                {
+                    "name": "ghost_mode",
+                    "lifeSpan": 0
+                }
+            ]
+        }
+        
+        # 설득 완료 시 다음 사람 혹은 재도전을 위해 해당 유저의 대화 기록 리셋
         del chat_db[user_id]
         
     return jsonify(response_data)
