@@ -142,7 +142,7 @@ def ghost_chat():
         response_data["template"]["quickReplies"].append({
             "action": "block",
             "label": "🚪 열린 길로 탈출하기",
-            "blockId": "여기에_다음_지역_블록_ID_넣기" 
+            "blockId": "6a1ce6546f076d7204740fbb" 
         })
         # 설득 완료 시 다음 사람을 위해 해당 유저의 대화 기록 리셋
         del chat_db[user_id]
